@@ -387,3 +387,28 @@ gap:15px;
 }
 
 }
+/* Light Theme */
+body.light-mode{
+    background:#f4f4f4;
+    color:#111;
+}
+
+body.light-mode header{
+    background:rgba(255,255,255,.8);
+}
+
+body.light-mode .card,
+body.light-mode .project,
+body.light-mode .edu{
+    background:#ffffff;
+    color:#111;
+}
+
+body.light-mode .navbar ul li a{
+    color:#111;
+}
+
+.active{
+    color:#38bdf8 !important;
+    font-weight:bold;
+}
