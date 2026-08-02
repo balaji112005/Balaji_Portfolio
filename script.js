@@ -1,95 +1,213 @@
-// ============================================================
-// Balaji S — Portfolio interactions
-// ============================================================
+// ===============================
+// DARK / LIGHT MODE
+// ===============================
 
-document.getElementById('year').textContent = new Date().getFullYear();
+const themeBtn = document.getElementById("theme-btn");
 
-/* ---------- Mobile nav ---------- */
-const hamburger = document.getElementById('hamburger');
-const navLinks = document.getElementById('nav-links');
+themeBtn.addEventListener("click", () => {
 
-hamburger.addEventListener('click', () => {
-  const isOpen = navLinks.classList.toggle('open');
-  hamburger.setAttribute('aria-expanded', isOpen);
+    document.body.classList.toggle("light-mode");
+
+    if(document.body.classList.contains("light-mode")){
+
+        themeBtn.innerHTML='<i class="fa-solid fa-sun"></i>';
+
+    }else{
+
+        themeBtn.innerHTML='<i class="fa-solid fa-moon"></i>';
+
+    }
+
 });
 
-navLinks.querySelectorAll('a').forEach(link => {
-  link.addEventListener('click', () => {
-    navLinks.classList.remove('open');
-    hamburger.setAttribute('aria-expanded', 'false');
-  });
-});
 
-/* ---------- Signal mode toggle (stop -> caution -> go -> stop) ---------- */
-const modes = ['stop', 'caution', 'go'];
-const signalToggle = document.getElementById('signal-toggle');
-const body = document.body;
+// ===============================
+// TYPING EFFECT
+// ===============================
 
-signalToggle.addEventListener('click', () => {
-  const current = modes.indexOf(body.dataset.mode);
-  const next = modes[(current + 1) % modes.length];
-  body.dataset.mode = next;
-  localStorage.setItem('bs-mode', next);
-});
+const textArray = [
 
-const savedMode = localStorage.getItem('bs-mode');
-if (savedMode && modes.includes(savedMode)) {
-  body.dataset.mode = savedMode;
-}
+"Web Developer",
 
-/* ---------- Typing effect ---------- */
-const typedEl = document.getElementById('typed');
-const phrases = ['ship faster.', 'solve real problems.', 'respond to what matters.', 'just work.'];
-let phraseIndex = 0;
+"Java Programmer",
+
+"Python Developer",
+
+"IT Graduate"
+
+];
+
+let index = 0;
 let charIndex = 0;
-let deleting = false;
+let currentText = "";
+let isDeleting = false;
 
-function typeLoop() {
-  const current = phrases[phraseIndex];
+const typing = document.querySelector(".typing");
 
-  if (!deleting) {
-    charIndex++;
-    typedEl.textContent = current.slice(0, charIndex);
-    if (charIndex === current.length) {
-      deleting = true;
-      setTimeout(typeLoop, 1400);
-      return;
+function type(){
+
+    currentText = textArray[index];
+
+    if(!isDeleting){
+
+        typing.textContent=currentText.substring(0,charIndex++);
+
+        if(charIndex>currentText.length){
+
+            isDeleting=true;
+
+            setTimeout(type,1000);
+
+            return;
+
+        }
+
+    }else{
+
+        typing.textContent=currentText.substring(0,charIndex--);
+
+        if(charIndex<0){
+
+            isDeleting=false;
+
+            index++;
+
+            if(index>=textArray.length){
+
+                index=0;
+
+            }
+
+        }
+
     }
-  } else {
-    charIndex--;
-    typedEl.textContent = current.slice(0, charIndex);
-    if (charIndex === 0) {
-      deleting = false;
-      phraseIndex = (phraseIndex + 1) % phrases.length;
-    }
-  }
 
-  setTimeout(typeLoop, deleting ? 35 : 65);
+    setTimeout(type,isDeleting?70:120);
+
 }
-typeLoop();
 
-/* ---------- Console boot sequence stagger ---------- */
-document.querySelectorAll('.console-line').forEach(line => {
-  const delay = parseInt(line.dataset.delay, 10) || 0;
-  line.style.animationDelay = `${delay}ms`;
+type();
+
+
+// ===============================
+// SCROLL ANIMATION
+// ===============================
+
+const sections = document.querySelectorAll("section");
+
+window.addEventListener("scroll",()=>{
+
+    sections.forEach(section=>{
+
+        const top=window.scrollY;
+
+        const offset=section.offsetTop-250;
+
+        if(top>offset){
+
+            section.style.opacity="1";
+            section.style.transform="translateY(0px)";
+
+        }
+
+    });
+
 });
 
-/* ---------- Scroll reveal for sections ---------- */
-const revealTargets = document.querySelectorAll('.section, .project-card, .stat, .skill-category, .cert-card, .log-entry');
-revealTargets.forEach(el => {
-  el.style.opacity = '0';
-  el.style.transform = 'translateY(16px)';
-  el.style.transition = 'opacity .6s ease, transform .6s ease';
+sections.forEach(section=>{
+
+    section.style.opacity="0";
+    section.style.transform="translateY(60px)";
+    section.style.transition=".8s";
+
 });
 
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.style.opacity = '1';
-      entry.target.style.transform = 'none';
-      observer.unobserve(entry.target);
+
+// ===============================
+// SCROLL TO TOP BUTTON
+// ===============================
+
+const topBtn=document.createElement("button");
+
+topBtn.innerHTML="⬆";
+
+topBtn.id="topBtn";
+
+document.body.appendChild(topBtn);
+
+topBtn.style.position="fixed";
+topBtn.style.right="20px";
+topBtn.style.bottom="20px";
+topBtn.style.width="50px";
+topBtn.style.height="50px";
+topBtn.style.border="none";
+topBtn.style.borderRadius="50%";
+topBtn.style.background="#38bdf8";
+topBtn.style.color="#000";
+topBtn.style.fontSize="20px";
+topBtn.style.cursor="pointer";
+topBtn.style.display="none";
+topBtn.style.boxShadow="0 0 20px #38bdf8";
+
+window.addEventListener("scroll",()=>{
+
+    if(window.pageYOffset>300){
+
+        topBtn.style.display="block";
+
+    }else{
+
+        topBtn.style.display="none";
+
     }
-  });
-}, { threshold: 0.12 });
 
-revealTargets.forEach(el => observer.observe(el));
+});
+
+topBtn.addEventListener("click",()=>{
+
+    window.scrollTo({
+
+        top:0,
+
+        behavior:"smooth"
+
+    });
+
+});
+
+
+// ===============================
+// NAVBAR ACTIVE LINK
+// ===============================
+
+const navLinks=document.querySelectorAll(".navbar a");
+
+window.addEventListener("scroll",()=>{
+
+    let current="";
+
+    document.querySelectorAll("section").forEach(section=>{
+
+        const sectionTop=section.offsetTop-150;
+
+        if(pageYOffset>=sectionTop){
+
+            current=section.getAttribute("id");
+
+        }
+
+    });
+
+    navLinks.forEach(link=>{
+
+        link.classList.remove("active");
+
+        if(link.getAttribute("href")==="#"+current){
+
+            link.classList.add("active");
+
+        }
+
+    });
+
+});
