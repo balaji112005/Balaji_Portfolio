@@ -3,35 +3,21 @@
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Initialize all interactive modules
   initScrollProgress();
   initThemeSwitcher();
+  initMobileMenu();
   initParticleCanvas();
   initTypingEngine();
   initFormHandling();
+  initBackToTop();
 });
 
 /* ==========================================
    1. SCROLL PROGRESS BAR
    ========================================== */
 function initScrollProgress() {
-  // Create progress element if it doesn't exist in HTML
-  let progressBar = document.getElementById('scroll-progress');
-  if (!progressBar) {
-    progressBar = document.createElement('div');
-    progressBar.id = 'scroll-progress';
-    Object.assign(progressBar.style, {
-      position: 'fixed',
-      top: '0',
-      left: '0',
-      height: '4px',
-      width: '0%',
-      backgroundColor: 'var(--primary-accent, #6366f1)',
-      zIndex: '9999',
-      transition: 'width 0.1s ease-out'
-    });
-    document.body.appendChild(progressBar);
-  }
+  const progressBar = document.getElementById('scroll-progress');
+  if (!progressBar) return;
 
   window.addEventListener('scroll', () => {
     const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
@@ -42,47 +28,68 @@ function initScrollProgress() {
 }
 
 /* ==========================================
-   2. THEME SWITCHER (Light / Dark)
+   2. THEME SWITCHER
    ========================================== */
 function initThemeSwitcher() {
   const themeBtn = document.getElementById('theme-toggle');
-  const storedTheme = localStorage.getItem('portfolio-theme');
+  if (!themeBtn) return;
 
-  // Apply saved theme or default to system preference
-  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const initialTheme = storedTheme || (systemPrefersDark ? 'dark' : 'light');
+  const storedTheme = localStorage.getItem('portfolio-theme');
+  const initialTheme = storedTheme || 'dark';
   
   document.documentElement.setAttribute('data-theme', initialTheme);
   updateThemeIcon(themeBtn, initialTheme);
 
-  if (themeBtn) {
-    themeBtn.addEventListener('click', () => {
-      const currentTheme = document.documentElement.getAttribute('data-theme');
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  themeBtn.addEventListener('click', () => {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
 
-      document.documentElement.setAttribute('data-theme', newTheme);
-      localStorage.setItem('portfolio-theme', newTheme);
-      updateThemeIcon(themeBtn, newTheme);
-    });
-  }
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('portfolio-theme', newTheme);
+    updateThemeIcon(themeBtn, newTheme);
+  });
 }
 
 function updateThemeIcon(button, theme) {
-  if (!button) return;
-  button.innerHTML = theme === 'dark' ? '☀️' : '🌙';
-  button.setAttribute('aria-label', `Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`);
+  const icon = button.querySelector('i');
+  if (!icon) return;
+  
+  if (theme === 'dark') {
+    icon.className = 'fa-solid fa-sun';
+  } else {
+    icon.className = 'fa-solid fa-moon';
+  }
 }
 
 /* ==========================================
-   3. PARTICLE CANVAS BACKGROUND
+   3. MOBILE NAVIGATION MENU
+   ========================================== */
+function initMobileMenu() {
+  const menuBtn = document.getElementById('menu-toggle');
+  const navLinks = document.getElementById('nav-links');
+
+  if (!menuBtn || !navLinks) return;
+
+  menuBtn.addEventListener('click', () => {
+    navLinks.classList.toggle('active');
+    const icon = menuBtn.querySelector('i');
+    if (icon) {
+      icon.classList.toggle('fa-bars');
+      icon.classList.toggle('fa-xmark');
+    }
+  });
+}
+
+/* ==========================================
+   4. PARTICLE CANVAS BACKGROUND (FIXED ID)
    ========================================== */
 function initParticleCanvas() {
-  const canvas = document.getElementById('particle-canvas');
+  // Corrected ID matching the HTML element: "particles-canvas"
+  const canvas = document.getElementById('particles-canvas');
   if (!canvas) return;
 
   const ctx = canvas.getContext('2d');
   let particles = [];
-  let animationFrameId;
 
   function resizeCanvas() {
     canvas.width = window.innerWidth;
@@ -115,15 +122,15 @@ function initParticleCanvas() {
       const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-      ctx.fillStyle = isDark ? 'rgba(255, 255, 255, 0.3)' : 'rgba(30, 41, 59, 0.2)';
+      ctx.fillStyle = isDark ? 'rgba(255, 255, 255, 0.3)' : 'rgba(30, 41, 59, 0.3)';
       ctx.fill();
     }
   }
 
   function createParticles() {
     particles = [];
-    const count = Math.floor((canvas.width * canvas.height) / 15000); // Responsive density
-    for (let i = 0; i < Math.min(count, 80); i++) {
+    const count = Math.floor((canvas.width * canvas.height) / 15000);
+    for (let i = 0; i < Math.min(count, 70); i++) {
       particles.push(new Particle());
     }
   }
@@ -131,7 +138,6 @@ function initParticleCanvas() {
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    // Draw particles and connection lines
     for (let i = 0; i < particles.length; i++) {
       particles[i].update();
       particles[i].draw();
@@ -147,14 +153,14 @@ function initParticleCanvas() {
           ctx.moveTo(particles[i].x, particles[i].y);
           ctx.lineTo(particles[j].x, particles[j].y);
           ctx.strokeStyle = isDark 
-            ? `rgba(255, 255, 255, ${0.15 - distance / 800})`
-            : `rgba(99, 102, 241, ${0.12 - distance / 1000})`;
+            ? `rgba(255, 255, 255, ${0.12 - distance / 1000})`
+            : `rgba(99, 102, 241, ${0.15 - distance / 800})`;
           ctx.lineWidth = 0.8;
           ctx.stroke();
         }
       }
     }
-    animationFrameId = requestAnimationFrame(animate);
+    requestAnimationFrame(animate);
   }
 
   resizeCanvas();
@@ -163,26 +169,22 @@ function initParticleCanvas() {
 }
 
 /* ==========================================
-   4. TYPING TEXT ENGINE
+   5. TYPING TEXT ENGINE
    ========================================== */
 function initTypingEngine() {
   const typingElement = document.getElementById('typing-text');
   if (!typingElement) return;
 
   const roles = [
-    'Full-Stack Developer',
-    'UI/UX Enthusiast',
-    'Problem Solver',
-    'Open Source Contributor'
+    'Software Developer',
+    'Java Programmer',
+    'Full-Stack Enthusiast',
+    'IT Student'
   ];
 
   let roleIndex = 0;
   let charIndex = 0;
   let isDeleting = false;
-
-  const typeSpeed = 100;
-  const deleteSpeed = 50;
-  const delayNext = 2000;
 
   function type() {
     const currentRole = roles[roleIndex];
@@ -195,10 +197,10 @@ function initTypingEngine() {
       charIndex++;
     }
 
-    let nextStepDelay = isDeleting ? deleteSpeed : typeSpeed;
+    let nextStepDelay = isDeleting ? 50 : 100;
 
     if (!isDeleting && charIndex === currentRole.length) {
-      nextStepDelay = delayNext;
+      nextStepDelay = 2000;
       isDeleting = true;
     } else if (isDeleting && charIndex === 0) {
       isDeleting = false;
@@ -213,57 +215,35 @@ function initTypingEngine() {
 }
 
 /* ==========================================
-   5. FORM HANDLING & VALIDATION
+   6. FORM HANDLING
    ========================================== */
 function initFormHandling() {
   const form = document.getElementById('contact-form');
-  const formStatus = document.getElementById('form-status');
-
   if (!form) return;
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
+    alert('Thank you! Your message has been sent successfully.');
+    form.reset();
+  });
+}
 
-    const name = form.querySelector('[name="name"]')?.value.trim();
-    const email = form.querySelector('[name="email"]')?.value.trim();
-    const message = form.querySelector('[name="message"]')?.value.trim();
+/* ==========================================
+   7. BACK TO TOP BUTTON
+   ========================================== */
+function initBackToTop() {
+  const backBtn = document.getElementById('back-to-top');
+  if (!backBtn) return;
 
-    // Basic Validation
-    if (!name || !email || !message) {
-      showStatus('Please fill in all required fields.', 'error');
-      return;
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 300) {
+      backBtn.style.display = 'block';
+    } else {
+      backBtn.style.display = 'none';
     }
-
-    if (!validateEmail(email)) {
-      showStatus('Please enter a valid email address.', 'error');
-      return;
-    }
-
-    // Simulate Form Submission (Replace with API endpoint like Formspree/EmailJS if needed)
-    const submitBtn = form.querySelector('button[type="submit"]');
-    if (submitBtn) submitBtn.disabled = true;
-    showStatus('Sending message...', 'info');
-
-    setTimeout(() => {
-      showStatus('Thank you, Balaji S will get back to you soon!', 'success');
-      form.reset();
-      if (submitBtn) submitBtn.disabled = false;
-    }, 1500);
   });
 
-  function showStatus(msg, type) {
-    if (!formStatus) return;
-    formStatus.textContent = msg;
-    formStatus.className = `status-message ${type}`;
-    formStatus.style.marginTop = '12px';
-    formStatus.style.fontWeight = '500';
-    
-    if (type === 'error') formStatus.style.color = '#ef4444';
-    else if (type === 'success') formStatus.style.color = '#10b981';
-    else formStatus.style.color = 'var(--text-muted)';
-  }
-
-  function validateEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  }
+  backBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 }
