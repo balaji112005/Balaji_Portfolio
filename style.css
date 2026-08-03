@@ -1,18 +1,18 @@
 /* ==========================================
-   1. CSS VARIABLES & THEMES
+   1. COLOR PALETTE & THEMES (FIXED VISIBILITY)
    ========================================== */
 :root {
-  /* Colors - Dark Theme (Default) */
+  /* Rich Modern Dark Theme */
   --bg-color: #0f172a;
-  --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-  --glass-bg: rgba(30, 41, 59, 0.5);
-  --glass-border: rgba(255, 255, 255, 0.08);
+  --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.12);
   --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   
   --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --primary-accent: #6366f1;
-  --secondary-accent: #ec4899;
+  --text-muted: #cbd5e1;
+  --primary-accent: #38bdf8;  /* Bright Cyan Accent */
+  --secondary-accent: #a855f7; /* Vibrant Purple Accent */
   
   --font-family: 'Inter', system-ui, -apple-system, sans-serif;
   --border-radius: 16px;
@@ -21,22 +21,20 @@
 }
 
 [data-theme="light"] {
-  /* Colors - Light Theme */
-  --bg-color: #f8fafc;
-  --bg-gradient: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+  /* Clean Bright Light Theme */
+  --bg-color: #f1f5f9;
+  --bg-gradient: linear-gradient(135deg, #e2e8f0 0%, #dbeafe 50%, #f3e8ff 100%);
   --glass-bg: rgba(255, 255, 255, 0.65);
   --glass-border: rgba(255, 255, 255, 0.6);
   --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.12);
   
   --text-main: #0f172a;
-  --text-muted: #64748b;
-  --primary-accent: #4f46e5;
-  --secondary-accent: #db2777;
+  --text-muted: #475569;
+  --primary-accent: #0284c7;
+  --secondary-accent: #9333ea;
 }
 
-/* ==========================================
-   2. RESET & BASE STYLES
-   ========================================== */
+/* Base resets */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -56,21 +54,9 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   position: relative;
-  transition: background var(--transition-smooth), color var(--transition-smooth);
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-ul {
-  list-style: none;
-}
-
-/* ==========================================
-   3. BACKGROUND CANVAS (FIXED LAYERING)
-   ========================================== */
+/* Canvas fix */
 #particles-canvas {
   position: fixed;
   top: 0;
@@ -78,30 +64,20 @@ ul {
   width: 100vw;
   height: 100vh;
   z-index: 0;
-  pointer-events: none; /* Allows click-through to HTML content */
+  pointer-events: none;
 }
 
-/* ==========================================
-   4. GLASSMORPHISM CORE CLASS
-   ========================================== */
-.glass-card, .glass-panel {
+/* Glassmorphism Cards */
+.glass-card {
   background: var(--glass-bg);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
   border-radius: var(--border-radius);
-  transition: transform var(--transition-smooth), border var(--transition-smooth), box-shadow var(--transition-smooth);
 }
 
-.glass-card:hover {
-  transform: translateY(-5px);
-  border-color: var(--primary-accent);
-}
-
-/* ==========================================
-   5. NAVIGATION BAR
-   ========================================== */
+/* Navbar Fixes */
 .navbar {
   position: fixed;
   top: 0;
@@ -109,9 +85,8 @@ ul {
   width: 100%;
   padding: 16px 0;
   z-index: 1000;
-  background: var(--glass-bg);
+  background: rgba(15, 23, 42, 0.7);
   backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--glass-border);
 }
 
@@ -128,6 +103,7 @@ ul {
   font-size: 1.25rem;
   font-weight: 700;
   font-family: 'Fira Code', monospace;
+  color: var(--text-main);
 }
 
 .logo-accent {
@@ -140,7 +116,6 @@ ul {
 }
 
 .nav-link {
-  font-weight: 500;
   color: var(--text-muted);
   transition: color var(--transition-fast);
 }
@@ -149,33 +124,16 @@ ul {
   color: var(--primary-accent);
 }
 
-.nav-actions {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
 .nav-actions button {
-  background: transparent;
+  background: rgba(255, 255, 255, 0.1);
   border: 1px solid var(--glass-border);
-  color: var(--text-main);
+  color: #f1f5f9;
   padding: 8px 12px;
   border-radius: 8px;
   cursor: pointer;
-  transition: background var(--transition-fast);
 }
 
-.nav-actions button:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-#menu-toggle {
-  display: none;
-}
-
-/* ==========================================
-   6. HERO SECTION & PROFILE PHOTO FIX
-   ========================================== */
+/* Hero Section */
 .hero-section {
   position: relative;
   z-index: 1;
@@ -196,7 +154,7 @@ ul {
   align-items: center;
   gap: 8px;
   padding: 6px 14px;
-  background: rgba(99, 102, 241, 0.15);
+  background: rgba(56, 189, 248, 0.15);
   border: 1px solid var(--primary-accent);
   border-radius: 20px;
   font-size: 0.85rem;
@@ -209,13 +167,11 @@ ul {
   height: 8px;
   background-color: #10b981;
   border-radius: 50%;
-  display: inline-block;
 }
 
 .hero-title {
   font-size: 3rem;
   font-weight: 800;
-  line-height: 1.2;
 }
 
 .highlight-text {
@@ -227,7 +183,6 @@ ul {
 .hero-subtitle {
   font-size: 1.5rem;
   margin: 12px 0;
-  font-weight: 600;
   min-height: 2.2rem;
 }
 
@@ -235,25 +190,50 @@ ul {
   color: var(--primary-accent);
 }
 
-.cursor {
-  display: inline-block;
-  width: 2px;
-  background-color: var(--text-main);
-  animation: blink 0.8s infinite;
+/* PROFILE IMAGE DISPLAY FIX */
+.profile-card {
+  padding: 24px;
+  text-align: center;
+  border: 1px solid var(--glass-border);
 }
 
-.hero-description {
-  color: var(--text-muted);
-  font-size: 1.05rem;
-  line-height: 1.6;
-  margin-bottom: 28px;
+.image-wrapper {
+  width: 200px;
+  height: 200px;
+  margin: 0 auto 20px auto;
+  border-radius: 50%;
+  padding: 5px;
+  background: linear-gradient(135deg, var(--primary-accent), var(--secondary-accent));
+  box-shadow: 0 0 25px rgba(56, 189, 248, 0.4);
 }
 
-/* Buttons */
+.profile-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+  background-color: var(--bg-color);
+}
+
+.code-snippet {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.85rem;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 14px;
+  border-radius: 8px;
+  text-align: left;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.code-keyword { color: #f472b6; }
+.code-string { color: #34d399; }
+
+/* Buttons & Socials */
 .hero-buttons {
   display: flex;
   gap: 16px;
-  margin-bottom: 28px;
+  margin: 24px 0;
 }
 
 .btn {
@@ -263,22 +243,18 @@ ul {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  text-decoration: none;
 }
 
 .btn-primary {
   background: linear-gradient(135deg, var(--primary-accent), var(--secondary-accent));
   color: #fff;
-  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
 }
 
 .btn-outline {
   border: 1px solid var(--glass-border);
   background: var(--glass-bg);
-}
-
-.btn:hover {
-  transform: translateY(-2px);
+  color: var(--text-main);
 }
 
 .hero-socials {
@@ -289,261 +265,8 @@ ul {
 
 .hero-socials a {
   color: var(--text-muted);
-  transition: color var(--transition-fast);
 }
 
 .hero-socials a:hover {
   color: var(--primary-accent);
-}
-
-/* Profile Photo Card Styling */
-.hero-visual {
-  display: flex;
-  justify-content: center;
-}
-
-.profile-card {
-  padding: 20px;
-  text-align: center;
-  width: 100%;
-  max-width: 320px;
-}
-
-.image-wrapper {
-  width: 220px;
-  height: 220px;
-  margin: 0 auto 16px auto;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 3px solid var(--primary-accent);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-}
-
-.profile-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.code-snippet {
-  font-family: 'Fira Code', monospace;
-  font-size: 0.85rem;
-  background: rgba(0, 0, 0, 0.2);
-  padding: 12px;
-  border-radius: 8px;
-  text-align: left;
-}
-
-.code-keyword { color: #f472b6; }
-.code-string { color: #34d399; }
-
-/* ==========================================
-   7. SECTIONS GENERAL
-   ========================================== */
-.section {
-  position: relative;
-  z-index: 1;
-  padding: 60px 20px;
-}
-
-.container {
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
-.section-title {
-  font-size: 2rem;
-  margin-bottom: 32px;
-  position: relative;
-  display: inline-block;
-}
-
-.section-title::after {
-  content: '';
-  position: absolute;
-  bottom: -8px;
-  left: 0;
-  width: 50%;
-  height: 4px;
-  background: var(--primary-accent);
-  border-radius: 2px;
-}
-
-/* About Grid */
-.about-grid, .skills-grid, .certifications-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-}
-
-.about-card, .skills-category, .cert-card, .project-card, .contact-info, .contact-form {
-  padding: 24px;
-}
-
-.card-icon {
-  font-size: 2rem;
-  color: var(--primary-accent);
-  margin-bottom: 12px;
-}
-
-/* Skills Progress Bar */
-.skill-item {
-  margin-top: 16px;
-}
-
-.skill-info {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 6px;
-  font-size: 0.9rem;
-}
-
-.progress-bar {
-  width: 100%;
-  height: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.progress {
-  height: 100%;
-  background: linear-gradient(90deg, var(--primary-accent), var(--secondary-accent));
-  border-radius: 4px;
-}
-
-.tags-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 12px 0 20px 0;
-}
-
-.tech-tag, .project-tags span {
-  padding: 6px 12px;
-  background: rgba(99, 102, 241, 0.1);
-  border: 1px solid var(--glass-border);
-  border-radius: 6px;
-  font-size: 0.85rem;
-}
-
-/* Timeline */
-.timeline-content {
-  padding: 20px;
-}
-
-.timeline-metric {
-  margin: 8px 0;
-}
-
-.metric-badge {
-  background: var(--primary-accent);
-  color: #fff;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 0.85rem;
-}
-
-/* Contact Form */
-.contact-wrapper {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-}
-
-.form-group {
-  margin-bottom: 16px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 0.9rem;
-}
-
-.form-group input, .form-group textarea {
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid var(--glass-border);
-  background: rgba(0, 0, 0, 0.1);
-  color: var(--text-main);
-  outline: none;
-}
-
-.form-group input:focus, .form-group textarea:focus {
-  border-color: var(--primary-accent);
-}
-
-.form-submit {
-  width: 100%;
-  border: none;
-  cursor: pointer;
-}
-
-/* Footer & Back To Top */
-.footer {
-  position: relative;
-  z-index: 1;
-  padding: 20px 0;
-  border-top: 1px solid var(--glass-border);
-}
-
-.footer-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-#back-to-top {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--primary-accent);
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  display: none;
-  z-index: 100;
-}
-
-/* Keyframes */
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-/* Responsive Styles */
-@media (max-width: 768px) {
-  .hero-container, .contact-wrapper {
-    grid-template-columns: 1fr;
-  }
-  
-  .hero-title {
-    font-size: 2.2rem;
-  }
-
-  .nav-links {
-    display: none; /* Hide for mobile toggle execution */
-    flex-direction: column;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background: var(--glass-bg);
-    backdrop-filter: blur(16px);
-    padding: 20px;
-  }
-
-  .nav-links.active {
-    display: flex;
-  }
-
-  #menu-toggle {
-    display: block;
-  }
 }
